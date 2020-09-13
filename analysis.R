@@ -3,7 +3,7 @@ library(tidyverse)
 source("functions.R")
 
 # Read in data
-scores <- read_csv("~/Dropbox/Journalism Admissions/applicants-genders.csv") %>%
+scores <- read_csv("../Data/applicants-genders.csv") %>%
   rename(applicant = `Applicant ID`, reviewer = Reviewer, score = Score, reviewer_sex = `Reviewer Sex`, applicant_gender = `Applicant Gender Identity`) %>%
   mutate(applicant = as_factor(applicant)) %>%
   mutate(applicant_gender = ifelse(applicant_gender == "Male", "Male", "NonMale"))
@@ -14,7 +14,7 @@ scores <- read_csv("~/Dropbox/Journalism Admissions/applicants-genders.csv") %>%
 ggplot(scores, aes(x = reviewer, y = score)) + geom_boxplot() + 
   labs(x = "Reviewer", y = "Score") +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5)) 
+  theme(plot.title = element_text(hjust = 0.5), text = element_text(size = 16)) 
 
 # Summary statistics
 reviewer_summary <- scores %>% 
@@ -39,7 +39,7 @@ ggplot(data = coin_scores, aes(reviewer, p.value)) +
   geom_hline(yintercept = 0.05, col = "red") +
   geom_hline(yintercept = 0.05/22, col = "orange") +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5)) 
+  theme(plot.title = element_text(hjust = 0.5), text = element_text(size = 16)) 
 
 # holm bonferroni correction
 coin_scores <- coin_scores %>% arrange(p.value) %>%
@@ -48,12 +48,12 @@ coin_scores <- coin_scores %>% arrange(p.value) %>%
          threshold = rank*0.05/nrow(coin_scores))
 
 ggplot(data = coin_scores, aes(reviewer, p.value)) + 
-  geom_point() +
-  geom_line(data = coin_scores, aes(x = reviewer, y = threshold), col = "orange", group = 1) +
+  geom_line(data = coin_scores, aes(x = reviewer, y = threshold), col = "orange", group = 1, size = 1.05) +
   labs(x = "Reviewer", y = "P-value") +
-  geom_hline(yintercept = 0.05, col = "red") +
+  geom_hline(yintercept = 0.05, col = "red", size = 1.05, linetype = "dashed") +
+  geom_point(size = 1.5) +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5), text = element_text(size = 16))
 
 ############## estimate scores ##############
 estimates <- estimate_all_scores(score_frame = scores) %>%
@@ -61,26 +61,26 @@ estimates <- estimate_all_scores(score_frame = scores) %>%
 
 #score plots
 ggplot(estimates, aes(x = `Observed Mean`, y = ANOVA)) + 
-  geom_point() +
+  geom_point(size = 1.5) +
   geom_abline(slope = 1, intercept = 0) +
   xlim(15,45) + 
   ylim(15,45) +
   theme_bw() +
-  theme(text = element_text(size=14))
+  theme(text = element_text(size = 16))
 ggplot(estimates, aes(x = `Observed Mean`, y = LSE)) + 
-  geom_point() +
+  geom_point(size = 1.5) +
   geom_abline(slope = 1, intercept = 0) +
   xlim(15,45) + 
   ylim(15,45) +
   theme_bw() +
-  theme(text = element_text(size=14))
+  theme(text = element_text(size = 16))
 ggplot(estimates, aes(x = ANOVA, y = LSE)) + 
-  geom_point() +
+  geom_point(size = 1.5) +
   geom_abline(slope = 1, intercept = 0) +
   xlim(15,45) + 
   ylim(15,45) +
   theme_bw() +
-  theme(text = element_text(size=14))
+  theme(text = element_text(size = 16))
 
 #rank plots
 ranks <- compute_ranks(estimates)
